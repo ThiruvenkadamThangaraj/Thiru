@@ -1,0 +1,80 @@
+<head>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+</head>
+<script>
+(function(){
+
+  //crete my module
+  angular.module('myApp', []);
+
+  // add controller to the module
+  angular.module('myApp').controller('mainCtrl', mainController);
+
+  function mainController( $http) {
+    // Get the data from the backend service
+    // http://private-a73e-aquentuxsociety.apiary-mock.com/members
+   var mc = this; $http({
+      method: 'GET',
+      url: 'http://private-a73e-aquentuxsociety.apiary-mock.com/members'
+    }).success(function(data,status,headers,config){
+      mc.members = data;
+    }).error(function(data,status,headers,config){
+    });
+    
+    console.log(mc.selectedMember);
+
+  }
+
+})();
+</script>
+<body ng-app="myApp">
+  <div class="container">
+    <header>
+      <h1>UX Society Members</h1>
+    </header>
+
+    <section ng-controller="mainCtrl as mc">
+      <div class="input-group">
+        <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+        <input type="search" placeholder="Search Here ...." class="form-control" data-ng-model="searchText">
+      </div>
+      <br>
+      <div class="col-md-8 col-sm-6 col-xs-12">
+        <h2 ng-hide="mc.members">Loading Member Data ....</h2>
+        <table class="table table-striped" data-ng-if="mc.members">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Occupation</th>
+              <th>Company</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="member in mc.members | filter:searchText" ng-click="mc.selectedMember = member" ng-class="{true: 'active-row', false:''}[mc.selectedMember == member] ">
+              <td>{{member.firstName}} {{member.middleInitial}} {{member.surname}}</td>
+              <td>{{member.occupation}}</td>
+              <td>{{member.company}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <aside class="col-md-4 col-sm-6 col-xs-12">
+
+        <div data-ng-if="mc.selectedMember">
+          <h2>{{mc.selectedMember.firstName}} {{mc.selectedMember.surname}}</h2>
+          <img data-ng-src="{{mc.selectedMember.portrait}}">
+          <p>{{mc.selectedMember.email}}</p>
+          <p>{{mc.selectedMember.occupation}}</p>
+          <p>{{mc.selectedMember.company}}</p>
+          <p>{{mc.selectedMember.motto}}</p>
+
+        </div>
+      </aside>
+    </section>
+  </div>
+  <script data-require="jquery@2.1.3" data-semver="2.1.3" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script data-require="bootstrap@*" data-semver="3.3.2" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="https://code.angularjs.org/1.3.16/angular.js"></script>
+</body>
+
+</html>
