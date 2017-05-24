@@ -1,0 +1,68 @@
+<head>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+</head>
+<script data-require="jquery@2.1.3" data-semver="2.1.3" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script data-require="bootstrap@*" data-semver="3.3.2" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="https://code.angularjs.org/1.3.16/angular.js"></script>
+  
+<script>
+	var app = angular.module('mainApp', []);
+	app.controller('myCtrl', function($scope, $http) {
+		
+		$http.get('http://private-a73e-aquentuxsociety.apiary-mock.com/members')
+		.success(function(response) {
+		$scope.employees =response;
+		
+		});
+		});
+</script>
+<style>
+table {
+  width: 100%;
+}
+
+tr:hover,
+.active-row {
+  cursor: pointer;
+  background-color: #ccc;
+  color: #333;
+}
+}
+</style>
+<body ng-app="mainApp">
+  <div class="container">
+    <header>
+      <h1>UX Society Members</h1>
+    </header>
+
+    <section ng-controller="myCtrl">
+      <div class="input-group">
+        <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+        <input type="search" placeholder="Search Here ...." class="form-control" ng-model="searchText">
+      </div>
+      <br>
+      <div class="col-md-8 col-sm-6 col-xs-12">
+        <h2 ng-hide="employees">Loading Member Data ....</h2>
+        <table class="table table-striped" ng-if="employees">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Occupation</th>
+              <th>Company</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="employee in employees | filter:searchText">
+              <td>{{employee.firstName}} {{employee.middleInitial}} {{employee.surname}}</td>
+              <td>{{employee.occupation}}</td>
+              <td>{{employee.company}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  
+</body>
+
+</html>
